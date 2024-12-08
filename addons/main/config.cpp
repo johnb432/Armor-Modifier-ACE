@@ -20,6 +20,4 @@ class CfgPatches {
 };
 
 #include "CfgEventHandlers.hpp"
-
-// Don't force ACE version until 3.18.0 has been out for a while
-// #include "CfgVersioning.hpp"
+#include "CfgVersioning.hpp"

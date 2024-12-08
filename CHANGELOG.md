@@ -1,3 +1,10 @@
+# Changelog for Armor Modifier - ACE 8.12.2024
+
+1.0.4.0
+- Fixed bug where units were unkillable in Zeus.
+- Removed backwards compatibility with ACE 3.17.1
+- Upped requirement from Arma 2.16 to Arma 2.18
+
 # Changelog for Armor Modifier - ACE 28.9.2024
 
 1.0.3.0

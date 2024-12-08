@@ -7,10 +7,10 @@
 
 #ifdef DISABLE_COMPILE_CACHE
     #undef PREP
-    #define PREP(fncName,filename) DFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,filename).sqf)
+    #define PREP(fncName) DFUNC(fncName) = compile preprocessFileLineNumbers QPATHTOF(functions\DOUBLES(fnc,fncName).sqf)
 #else
     #undef PREP
-    #define PREP(fncName,filename) [QPATHTOF(functions\DOUBLES(fnc,filename).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
+    #define PREP(fncName) [QPATHTOF(functions\DOUBLES(fnc,fncName).sqf), QFUNC(fncName)] call CBA_fnc_compileFunction
 #endif
 
 // #include "\z\ace\addons\medical_engine\script_component.hpp"
