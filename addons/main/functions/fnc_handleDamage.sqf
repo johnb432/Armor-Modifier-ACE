@@ -17,6 +17,8 @@
  * Public: No
  */
 
+#define INSTAKILL_ALLOWED(unit) (unit isNotEqualTo (unit getVariable ["ace_medical_engine_blockInstaKill", objNull]))
+
 params ["_args", ["_ignoreAllowDamageACE", false]];
 _args params ["_unit", "_selection", "_damage", "_shooter", "_ammo", "_hitPointIndex", "_instigator", "_hitpoint", "_directHit", "_context"];
 
@@ -40,13 +42,21 @@ if !(isDamageAllowed _unit && {_unit getVariable ["ace_medical_allowDamage", tru
 // Killing units via End key is an edge case (#10375)
 // This didn't matter pre-Arma 3 2.18 but now this goes through the event handler
 // TODO: Structural fire damage >= 1 in a single damage event could still be caught here and we don't want that, but we haven't found a better way to catch this, fire damage should be small most of the time anyway
+// Also triggers for catastrophic vehicle explosions which would kill crew outright, check for blocking
 private _newDamage = _damage - _oldDamage;
-if (_structuralDamage && {(abs (_newDamage - 1)) < 0.001 && _ammo == "" && isNull _shooter && isNull _instigator}) exitWith {_damage};
+if (_structuralDamage && {(abs (_newDamage - 1)) < 0.001 && _ammo == "" && isNull _shooter && isNull _instigator} && {INSTAKILL_ALLOWED(_unit)}) exitWith {_damage};
 
 // _newDamage == 0 happens occasionally for vehiclehit events (see line 80 onwards), just exit early to save some frametime
 // context 4 is engine "bleeding". For us, it's just a duplicate event for #structural which we can ignore without any issues
+// Leverage this to block insta-kills on the same frame (see above)
 if (_context != 2 && {_context == 4 || _newDamage == 0}) exitWith {
     TRACE_4("Skipping engine bleeding or zero damage",_ammo,_newDamage,_directHit,_context);
+
+    if (INSTAKILL_ALLOWED(_unit)) then {
+        _unit setVariable ["ace_medical_engine_blockInstaKill", _unit];
+        [{_this setVariable ["ace_medical_engine_blockInstaKill", nil]}, _unit] call CBA_fnc_execNextFrame;
+    };
+
     _oldDamage
 };
 
