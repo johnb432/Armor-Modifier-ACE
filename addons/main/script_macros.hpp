@@ -22,4 +22,6 @@
 #define PRIORITY_RIGHT_LEG  (1 + random 1)
 #define PRIORITY_STRUCTURAL 1
 
+#define TYPE_UNIFORM 801
+
 #define GET_NUMBER(config,default) (if (isNumber (config)) then {getNumber (config)} else {default})

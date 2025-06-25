@@ -7,4 +7,6 @@ ADDON = false;
 // CBA Settings
 #include "initSettings.inc.sqf"
 
+GVAR(armorCache) = createHashMap;
+
 ADDON = true;
